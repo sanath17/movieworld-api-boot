@@ -1,6 +1,7 @@
 package com.movieworld.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.Repository;
 
@@ -10,7 +11,7 @@ public interface UserReviewRepository extends Repository<UserReview, String> {
 
 	public List<UserReview> findAll();
 
-	public UserReview findOne(UserReview id);
+	public Optional<UserReview> findOne(String id);
 
 	public UserReview save(UserReview comments);
 

@@ -1,28 +1,15 @@
 package com.movieworld.entity;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table
-@NamedQueries({ @NamedQuery(name = "Movie.findAll", query = "SELECT e FROM Movie e ORDER BY e.title ASC"),
-		@NamedQuery(name = "Movie.findByYear", query = "SELECT e FROM Movie e ORDER BY e.year ASC"),
-		@NamedQuery(name = "Movie.findByGenere", query = "SELECT e FROM Movie e ORDER BY e.genere ASC"),
-		@NamedQuery(name = "Movie.findByRatings", query = "SELECT e FROM Movie e ORDER BY e.imdb_ratings ASC"),
-		@NamedQuery(name = "Movie.findByTitle", query = "SELECT e FROM Movie e WHERE e.title=:pTitle"),
-        @NamedQuery(name = "Movie.findOne", query = "SELECT e FROM Movie e WHERE e.id=:pId")})
 public class Movie {
 
 	@Id
-	@GenericGenerator(name = "customUUID", strategy = "uuid2")
-	@GeneratedValue(generator = "customUUID")
 	private String id;
 
 	@Column(unique = true)
@@ -61,6 +48,10 @@ public class Movie {
 	private String imdb_id;
 
 	private String type;
+	
+	public Movie() {
+		this.id = UUID.randomUUID().toString();
+	}
 
 	public String getId() {
 		return id;
@@ -214,13 +205,13 @@ public class Movie {
 		this.type = type;
 	}
 
-	@Override
-	public String toString() {
-		return "Movie [id=" + id + ", title=" + title + ", year=" + year + ", rated=" + rated + ", released=" + released
-				+ ", genere=" + genere + ", director=" + director + ", writer=" + writer + ", actors=" + actors
-				+ ", plot=" + plot + ", language=" + language + ", country=" + country + ", awards=" + awards
-				+ ", poster=" + poster + ", metascore=" + metascore + ", imdb_ratings=" + imdb_ratings
-				+ ", imdb_votings=" + imdb_votings + ", imdb_id=" + imdb_id + ", type=" + type + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "Movie [id=" + id + ", title=" + title + ", year=" + year + ", rated=" + rated + ", released=" + released
+//				+ ", genere=" + genere + ", director=" + director + ", writer=" + writer + ", actors=" + actors
+//				+ ", plot=" + plot + ", language=" + language + ", country=" + country + ", awards=" + awards
+//				+ ", poster=" + poster + ", metascore=" + metascore + ", imdb_ratings=" + imdb_ratings
+//				+ ", imdb_votings=" + imdb_votings + ", imdb_id=" + imdb_id + ", type=" + type + "]";
+//	}
 
 }

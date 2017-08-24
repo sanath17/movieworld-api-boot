@@ -2,21 +2,22 @@ package com.movieworld.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.movieworld.entity.UserReview;
-import com.movieworld.exception.ReviewNotFoundException;
+import com.movieworld.exception.UserNotFoundException;
 import com.movieworld.repository.UserReviewRepository;
 
 @Service
-@EnableTransactionManagement
 public class UserReviewServiceImpl implements UserReviewService {
+	
+	private UserReviewRepository repository;
 
-	@Autowired
-	UserReviewRepository repository;
+	public UserReviewServiceImpl(UserReviewRepository repository) {
+		this.repository = repository;
+	}
+
 
 	@Override
 	public List<UserReview> findAll() {
@@ -24,12 +25,10 @@ public class UserReviewServiceImpl implements UserReviewService {
 	}
 
 	@Override
-	public UserReview findOne(UserReview id, UserReview comments) {
-		UserReview existing = repository.findOne(id);
-		if (existing == null) {
-			throw new ReviewNotFoundException("Review with id:" + id + " not found");
-		}
-		return existing;
+	@Transactional(readOnly = true)
+	public UserReview findOne(String id) {
+		return repository.findOne(id)
+				.orElseThrow(() -> new UserNotFoundException("User with id " + id + " does not exist"));
 	}
 
 	@Override
@@ -40,21 +39,17 @@ public class UserReviewServiceImpl implements UserReviewService {
 
 	@Override
 	@Transactional
-	public UserReview update(UserReview id, UserReview comments) {
-		UserReview existing = repository.findOne(id);
-	if (existing == null) {
-		throw new ReviewNotFoundException("Review with id:" + id + " not found");
-		}
+	public UserReview update(String id, UserReview comments) {
+		repository.findOne(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " does not exist"));
 		return repository.save(comments);
 	}
 
 	@Override
 	@Transactional
-	public void delete(UserReview id) {
-		UserReview existing = repository.findOne(id);
-		if (existing == null) {
-			throw new ReviewNotFoundException("Review with id:" + id + " not found");
-		}
+	public void delete(String id) {
+		UserReview existing = repository.findOne(id)
+				.orElseThrow(() -> new UserNotFoundException("User with id " + id + " does not exist"));
 		repository.delete(existing);
 	}
+
 }

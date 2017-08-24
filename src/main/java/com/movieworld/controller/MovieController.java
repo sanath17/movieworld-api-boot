@@ -2,8 +2,6 @@ package com.movieworld.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,19 +9,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.movieworld.constants.URI;
 import com.movieworld.entity.Movie;
 import com.movieworld.service.MovieService;
 
 
 @Controller
 @ResponseBody
-@RequestMapping(path = "Movie")
+@RequestMapping(path = URI.Movie)
 public class MovieController  {
 	
-	@Autowired
-	MovieService service;
 	
-	@RequestMapping(method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_UTF8_VALUE  )
+	private MovieService service;
+	
+	public MovieController(MovieService service) {
+		this.service = service;
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
 	public List<Movie> findAll(){
 		return service.findAll();	
 	}
@@ -33,7 +36,7 @@ public class MovieController  {
 //		return service.findByTitle(title);
 //	}
 	
-	@RequestMapping(method=RequestMethod.GET, path= "{id}", produces=MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@RequestMapping(method=RequestMethod.GET, value = URI.ID)
 	public Movie findOne(@PathVariable("id") String id) {
 		return service.findOne(id);
 	}
@@ -54,19 +57,19 @@ public class MovieController  {
 //		return service.findByType(type);
 //	}
 	
-	@RequestMapping(method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_UTF8_VALUE, consumes=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(method=RequestMethod.POST)
 	public Movie create(@RequestBody Movie title) {
 		return service.create(title);	
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT, path= "{title}", produces=MediaType.APPLICATION_JSON_UTF8_VALUE, consumes=MediaType.APPLICATION_JSON_UTF8_VALUE )
-	public Movie update(@PathVariable("title") Movie title) {
-		return service.update(title);
+	@RequestMapping(method=RequestMethod.PUT, value = URI.ID)
+	public Movie update(@PathVariable("title")String id, Movie title) {
+		return service.update(id,title);
 	}
 	
-	@RequestMapping(method=RequestMethod.DELETE, path= "{title}" )
-	public void delete(@PathVariable("title") String title) {
-		 service.delete(title);
+	@RequestMapping(method=RequestMethod.DELETE, value = URI.ID )
+	public void delete(@PathVariable("id") String id) {
+		 service.delete(id);
 	}
 		
 	

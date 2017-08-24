@@ -1,10 +1,10 @@
 package com.movieworld.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.movieworld.entity.User;
@@ -16,7 +16,6 @@ import com.movieworld.repository.UserRepository;
 
 @Service("userService")
 @Transactional
-@EnableTransactionManagement
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
@@ -28,47 +27,36 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public User findByEmail(String email) {
-		User existing = repository.findByEmail(email);
-		if (existing == null) {
-			throw new UserNotFoundException("User with email:" + email + " not found");
-		}
-		return existing;
+		return repository.findByEmail(email)
+				.orElseThrow(() -> new UserNotFoundException("User with id " + email + " does not exist"));
 	}
 	
 	@Override
 	@Transactional
-	public User create(User email) {
-		User existing = repository.findByEmail(email.getEmail());
-		if (existing != null) {
-			throw new UserAlreadyExistsException("Email is already in use: " + email);
+	public User create(User user) {
+		Optional<User> mayExists = repository.findByEmail(user.getEmail());
+		if (mayExists.isPresent()) {
+			throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists");
 		}
-		return repository.save(email);
+		return repository.save(user);
 	}
 
 
 	@Override
 	@Transactional
-	public User update(User email) {
-		User existing = repository.findByEmail(email.getEmail());
-		if (existing == null) {
-			throw new UserNotFoundException("User with id:" + email.getEmail() + " not found");
-		}
-		return repository.save(email);
+	public User update(String email, User user) {
+		repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User with id " + email + " does not exist"));
+		return repository.save(user);
 	}
-
+	
 	@Override
 	@Transactional
 	public void delete(String email) {
-	User existing = repository.findByEmail(email);
-		if (existing == null) {
-			throw new UserNotFoundException("User with id:" + email + " not found");
-		}
+		User existing = repository.findByEmail(email)
+				.orElseThrow(() -> new UserNotFoundException("User with id " + email + " does not exist"));
 		repository.delete(existing);
-	}
-	
-	public User findById(int id) {
-		return repository.findById(id);
 	}
 
 

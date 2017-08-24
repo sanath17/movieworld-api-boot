@@ -1,28 +1,19 @@
 package com.movieworld.entity;
 
+import java.util.UUID;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
-@Table
-@NamedQueries({ 
-	@NamedQuery(name = "UserReview.findAll", query = "SELECT e FROM UserReview e") 
-})
 public class UserReview {
 
 	@Id
-	@GenericGenerator(name = "customUUID", strategy = "uuid2")
-	@GeneratedValue(generator = "customUUID")
 	private String Rid;
 
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -35,6 +26,10 @@ public class UserReview {
 	private String comments;
 	
 	private int user_ratings;
+	
+	public UserReview() {
+		this.Rid = UUID.randomUUID().toString();
+	}
 
 	public String getId() {
 		return Rid;

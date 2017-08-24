@@ -6,17 +6,14 @@ import com.movieworld.entity.User;
 
 public interface UserService {
 
-	 List<User> findAll();
+	List<User> findAll();
 
-	 User findByEmail(String email);
+	User findByEmail(String email);
 
-	 User create(User email);
+	User create(User email);
 
-	 User update(User email);
+	User update(String email, User user);
 
-	 void delete(String email);
-	
-	User findById(int id);
-	
+	void delete(String email);
 
 }
