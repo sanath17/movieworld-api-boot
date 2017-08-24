@@ -5,16 +5,15 @@ import java.util.List;
 import com.movieworld.entity.Movie;
 
 public interface MovieService {
-	
-	public  List<Movie> findAll();
-	
-	public  Movie findOne(String id);
-	
+
+	public List<Movie> findAll();
+
+	public Movie findOne(String id);
+
 	public Movie create(Movie title);
-	
-	public Movie update(String id, Movie title); 
-	
+
+	public Movie update(String id, Movie title);
+
 	public void delete(String id);
 
-	
 }
